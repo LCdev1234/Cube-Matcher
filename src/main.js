@@ -980,7 +980,7 @@ class DeadScene extends Phaser.Scene {
 
         this.button = this.add.container(200,200)
         this.button_background = this.add.rectangle(0, 0, 100, 50, 0xffffff).setInteractive()
-        this.button_text = this.add.text(0, 0, "Play Again", {
+        this.button_text = this.add.text(0, 0, "Retry", {
             fontFamily:"Arial",
             fontSize:"32px",
             color:"#000000"
