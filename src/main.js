@@ -318,12 +318,15 @@ class MainScene extends Phaser.Scene {
     create() {
         if(this.difficulty == undefined) this.difficulty = MainScene.difficulty
         if(this.difficulty == undefined) this.difficulty = 1
-        console.log(this.difficulty)
         //Clear all
         this.input.setDefaultCursor('default')
         this.win = false
         Zombie.reset()
-        Zombie.maximum_zombies = 3
+        if(this.difficulty == 3 || this.difficulty == 2){
+            Zombie.setMaximumZombies(3)
+        }else if(this.difficulty == 1){
+            Zombie.setMaximumZombies(2)
+        }
 
         this.wait_timer = 0
         //Set scaling method for pixel images
@@ -427,7 +430,7 @@ class MainScene extends Phaser.Scene {
 
         //Rendering initialization
         this.visible_rotates = []
-        this.cube = new Cube(30, 45, 0)
+        this.cube = new Cube(30, 45, 0, this.difficulty)
         this.cube_default_y = 45
         this.cube_default_x = 30
         this.y_rotation_anim = 0
@@ -436,7 +439,7 @@ class MainScene extends Phaser.Scene {
         this.player = new Player(0, -50, 0, this.key_input, this.cube.general_cube)
 
         //Zombies
-        let total_zombies = 3-(Zombie.all.size-Zombie.falling.size)
+        let total_zombies = Zombie.maximum_zombies-(Zombie.all.size-Zombie.falling.size)
         for(let i = 0; i < total_zombies; i++){
             const avaible = Zombie.avaible_columns()
             const position = avaible[Math.floor(Math.random() * avaible.length)]
@@ -472,6 +475,14 @@ class MainScene extends Phaser.Scene {
         ]
 
         //Generate Pattern
+        let solid_colors = 6
+        if(this.difficulty == 1){
+            solid_colors = 5
+        }else if(this.difficulty == 2){
+            solid_colors = 5
+        }else if(this.difficulty == 3){
+            solid_colors = 6
+        }
         let avaible_colors = [
             "white","white","white",
             "blue","blue","blue",
@@ -481,14 +492,15 @@ class MainScene extends Phaser.Scene {
             "red","red","red"
         ]
         let use_colors = []
-        for(let i = 0; i < 6; i++){
+        for(let i = 0; i < solid_colors; i++){
             let random = Math.floor(Math.random() * avaible_colors.length)
             use_colors.push(avaible_colors[random])
             avaible_colors.splice(random, 1)
         }
-        use_colors.push("any")
-        use_colors.push("any")
-        use_colors.push("any")
+        for(let i = 0; i < 9-solid_colors; i++){
+            use_colors.push("any")
+        }
+
         use_colors.sort(() => Math.random() - 0.5)
         let i = 0
         for(let x = 0; x < 3; x++){

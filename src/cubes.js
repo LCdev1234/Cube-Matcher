@@ -3,7 +3,7 @@ import Zombie from "./zombie"
 import Phaser from "phaser"
 
 export default class Cube {
-    constructor(rx, ry, rz){
+    constructor(rx, ry, rz, difficulty){
         let cube1 = new Object3d([
             new Face3d(
                 [
@@ -1663,9 +1663,15 @@ export default class Cube {
             "orange",
             "white"
         ]
+        let difficult_colors = 8
+        if(difficulty == 3){
+            difficult_colors = 8
+        }else if(difficulty == 2 || this.difficulty == 1){
+            difficult_colors = 7
+        }
         let all_colors = []
         for(let n = 0; n < this.avaible_colors.length; n++){
-            for(let i = 0; i < 8; i++){
+            for(let i = 0; i < difficult_colors; i++){
                 all_colors.push(this.avaible_colors[n])
             }
         }
@@ -1673,9 +1679,14 @@ export default class Cube {
         let final_colors = []
         let index = 0
         for(let n = 0; n < 6; n++){
-            let random = Math.floor(Math.random()*9)
+            let random = []
+            for(let i = 0; i < 9-difficult_colors; i++){
+                let is = Math.floor(Math.random()*9)
+                for(is = Math.floor(Math.random()*9); random.includes(is); is=Math.floor(Math.random()*9)){}
+                random.push(is)
+            }
             for(let i = 0; i < 9; i++){
-                if(random == i){
+                if(random.includes(i)){
                     final_colors.push("")
                 }else{
                     final_colors.push(all_colors[index])

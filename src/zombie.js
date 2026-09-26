@@ -223,7 +223,7 @@ export default class Zombie{
 
     add_steps(steps = 10){
         if(this.can_steps) this.steps += steps
-        let total_zombies = 3-(Zombie.all.size-Zombie.falling.size)
+        let total_zombies = Zombie.maximum_zombies-(Zombie.all.size-Zombie.falling.size)
         for(let i = 0; i < total_zombies; i++){
             const avaible = Zombie.avaible_columns()
             const position = avaible[Math.floor(Math.random() * avaible.length)]
@@ -251,5 +251,9 @@ export default class Zombie{
     static reset(){
         Zombie.all.clear()
         Zombie.falling.clear()
+    }
+
+    static setMaximumZombies(maximum){
+        Zombie.maximum_zombies = maximum
     }
 }
