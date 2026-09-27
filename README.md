@@ -2,7 +2,7 @@
 [![itch.io](https://img.shields.io/badge/itch.io-Cubic%20Runner-fa5c5c?logo=itchdotio&logoColor=white)](https://lcdev1234.itch.io/cube-matcher)
 
 ## Cube Matcher
-A 3d puzzle game where you rotate a cube to match a pattern, but being careful that the zombies dont get too close to you
+A 3d puzzle web game where you rotate a cube to match a pattern, but being careful that the zombies dont get too close to you
 
 ![Game Capture](https://github.com/user-attachments/assets/92dd31c8-4441-42a0-a507-57ca993cc4ea)
 ## Play in
@@ -19,6 +19,7 @@ Playi in browser on: _[itch.io](https://lcdev1234.itch.io/cube-matcher)_
 - Different game difficulties
 - Random patterns to solve
 - Patters can match even when rotated
+- Zombies that climp up each action you take
 
 ## Building
 Alredy builded realeses in _[here](https://github.com/LCdev1234/Cube-Matcher/releases)_
@@ -31,6 +32,9 @@ If you'd rather build the game yourself:
    ```npm run dev```
 4. To build the game:
   ```npm run build```
+
+## AI usage
+I used ChatGPT and Gemini for debugging, learning, and consulting about how to use Phaser and Git, as well as for ideas on how to solve problems in my code. I also used GitHub Copilot to help me fix some Git-related issues.
 
 ## Credits
 
