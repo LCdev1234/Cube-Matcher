@@ -65,7 +65,7 @@ export default class Zombie{
         Zombie.all.add(this)
     }
 
-    update(fps_ratio, rotations, actual_rotations, rotation, player){
+    update(fps_ratio, rotations, actual_rotations, rotation, player, walk_sound){
         if(!this.can_steps) this.can_steps = true
         let a_texture = "zombie"
         let is_anim = false
@@ -99,7 +99,10 @@ export default class Zombie{
                     let last_steps = this.steps
                     this.steps = Math.max(0, this.steps - 0.7*fps_ratio)
                     this.y -= last_steps - this.steps
-                    if(last_steps - this.steps > 0) is_anim = true
+                    if(last_steps - this.steps > 0) {
+                        if(!walk_sound.isPlaying) walk_sound.play()
+                        is_anim = true
+                    }
                 }
             }
             if(this.y < -65){
@@ -156,6 +159,7 @@ export default class Zombie{
         }
         if(this.up){
             if(!player.dead){
+                if(!walk_sound.isPlaying) walk_sound.play()
                 let angle_to_player = Math.atan2(player.z - (this.z), player.x - (this.x))
                 let distance_to_player = Math.hypot(player.x - (this.x), player.z - (this.z))
                 this.x += 1.5 * Math.cos(angle_to_player) * fps_ratio
@@ -216,7 +220,7 @@ export default class Zombie{
                 this.x = x
                 this.y = y
                 this.z = z
-                this.column = Math.floor((this[this.face] + 90) /60)
+                this.column = Math.min(Math.max(0, Math.floor((this[this.face] + 90) /60)), 2)
             }
         }
     }

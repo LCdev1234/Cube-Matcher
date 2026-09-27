@@ -309,6 +309,43 @@ class MainScene extends Phaser.Scene {
             "zombie_hands",
             "./assets/zombie/hands.png"
         )
+
+        //Audio
+        this.load.audio
+        (
+            "background_music",
+            "./assets/audio/background_music.mp3"
+        )
+        this.load.audio
+        (
+            "click",
+            "./assets/audio/click.mp3"
+        )
+        this.load.audio
+        (
+            "jump_impact",
+            "./assets/audio/jump_impact.ogg"
+        )
+        this.load.audio
+        (
+            "rotation_sound",
+            "./assets/audio/rotation.mp3"
+        )
+        this.load.audio
+        (
+            "slide_sound",
+            "./assets/audio/slide.ogg"
+        )
+        this.load.audio
+        (
+            "zombie_walk",
+            "./assets/audio/walking_leaves.mp3"
+        )
+        this.load.audio
+        (
+            "win_audio",
+            "./assets/audio/win.mp3"
+        )
     }
 
     init(data){
@@ -540,6 +577,7 @@ class MainScene extends Phaser.Scene {
         this.button_container.setInteractive(new Phaser.Geom.Rectangle(-80, 30, 55, 60), Phaser.Geom.Rectangle.Contains)
         //User interaction
         this.button_container.on('pointerdown', () => {
+            this.click.play()
             this.scene.pause()
             this.blur = this.add.rectangle(this.scale.width/2, this.scale.height/2, this.scale.width, this.scale.height, 0x000000, 0.8)
             this.blur.setDepth(2)
@@ -555,6 +593,31 @@ class MainScene extends Phaser.Scene {
             this.input.setDefaultCursor('default')
             this.pause1.setFillStyle(0xffffff)
             this.pause2.setFillStyle(0xffffff)
+        })
+
+        //Music
+        this.background_music = this.sound.add("background_music", {volume:0.05, loop:true})
+        this.background_music.play()
+        this.click = this.sound.add("click", {volume: 0.5})
+        this.jump_impact = this.sound.add("jump_impact", {volume:0.2})
+        this.rotation_sound = this.sound.add("rotation_sound", {volume:0.05})
+        this.slide_sound = this.sound.add("slide_sound", {volume:0.5})
+        this.zombie_walk = this.sound.add("zombie_walk", {volume:0.5})
+        this.win_audio = this.sound.add("win_audio", {volume:0.3})
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+            if (this.background_music && this.background_music.isPlaying) {
+                this.background_music.stop()
+            }
+        })
+        this.events.on(Phaser.Scenes.Events.PAUSE, () => {
+            if (this.background_music && this.background_music.isPlaying) {
+                this.background_music.pause()
+            }
+        })
+        this.events.on(Phaser.Scenes.Events.RESUME, () => {
+            if (this.background_music && this.background_music.isPaused) {
+                this.background_music.resume()
+            }
         })
     }
 
@@ -592,7 +655,7 @@ class MainScene extends Phaser.Scene {
 
         //Update Zombies
         for(let zombie of Zombie.all){
-            zombie.update(fps_ratio, this.cube.actual_anim_rotations, this.cube.rubik_rotation, this.cube.rotation, this.player)
+            zombie.update(fps_ratio, this.cube.actual_anim_rotations, this.cube.rubik_rotation, this.cube.rotation, this.player, this.zombie_walk)
         }
 
         //Debug
@@ -606,6 +669,7 @@ class MainScene extends Phaser.Scene {
         //console.log(Math.floor((this.player.x + 90)/60))
         //this.cube.rubik_rotation.x[Math.floor((this.player.x + 90)/60)] += 0.1*/
         if(this.player.push){
+            this.jump_impact.play()
             this.player.second_jump = time - this.player.last_jump_time < 600
             this.player.last_jump_time = time
 
@@ -618,6 +682,7 @@ class MainScene extends Phaser.Scene {
             else index = Math.floor((this.player.z + 90)/60)
             //this.cube.rubik_rotate(smallest_axis, index, smallest_direction)
             if(this.player.second_jump && this.cube.last_rotated_axis == smallest_axis && this.cube.last_rotated_index == index){
+                this.rotation_sound.play()
                 this.cube.rubik_rotate(smallest_axis, index, smallest_direction)
                 this.player.last_jump_time = 0
             }else{
@@ -645,6 +710,7 @@ class MainScene extends Phaser.Scene {
             }
             if(this.player.can_shift){
                 if(this.player.final_slide.finish){
+                    this.slide_sound.play()
                     this.player.final_slide.finish = false;
                     this.cube.moving_color.x += this.player.final_slide.x
                     this.cube.moving_color.z += this.player.final_slide.z
@@ -803,6 +869,7 @@ class MainScene extends Phaser.Scene {
 
         //check if player win
         if(this.win && !this.player.dead){
+            this.win_audio.play()
             this.player.active = false
             let rotation = (this.match().rotation+1) * 90
             this.cube.rotation.y = Math.min(this.cube.rotation.y +2, rotation)
@@ -895,6 +962,13 @@ class WinScene extends Phaser.Scene {
     constructor(){
         super("WinScene")
     }
+    preload(){
+        this.load.audio
+        (
+            "click",
+            "./assets/audio/click.mp3"
+        )
+    }
     create(){
         this.title = this.add.text(0, 0, "You win!!", {
             fontFamily:"Arial",
@@ -925,6 +999,7 @@ class WinScene extends Phaser.Scene {
 
         //User interaction
         this.button_background.on('pointerdown', () => {
+            this.click.play()
             this.button.setScale(0.9, 0.9)
             this.scene.stop()
             this.scene.launch("Transition")
@@ -939,6 +1014,7 @@ class WinScene extends Phaser.Scene {
         })
 
         this.button_background1.on('pointerdown', () => {
+            this.click.play()
             this.button1.setScale(0.9, 0.9)
             this.scene.stop("game-scene")
             this.scene.stop()
@@ -954,6 +1030,8 @@ class WinScene extends Phaser.Scene {
         })
 
         this.cameras.main.fadeIn(500, 0, 0, 0);
+
+        this.click = this.sound.add("click", {volume:0.3})
     }
     update(){
         let width = this.scale.width
@@ -970,6 +1048,13 @@ class WinScene extends Phaser.Scene {
 class DeadScene extends Phaser.Scene {
     constructor(){
         super("DeadScene")
+    }
+    preload(){
+        this.load.audio
+        (
+            "click",
+            "./assets/audio/click.mp3"
+        )
     }
     create(){
         this.title = this.add.text(0, 0, "You may have died :(", {
@@ -1001,6 +1086,7 @@ class DeadScene extends Phaser.Scene {
 
         //User interaction
         this.button_background.on('pointerdown', () => {
+            this.click.play()
             this.button.setScale(0.9, 0.9)
             this.scene.stop()
             this.scene.launch("Transition")
@@ -1015,6 +1101,7 @@ class DeadScene extends Phaser.Scene {
         })
 
         this.button_background1.on('pointerdown', () => {
+            this.click.play()
             this.button1.setScale(0.9, 0.9)
             this.scene.stop("game-scene")
             this.scene.stop()
@@ -1030,6 +1117,8 @@ class DeadScene extends Phaser.Scene {
         })
 
         this.cameras.main.fadeIn(500, 0, 0, 0);
+
+        this.click = this.sound.add("click", {volume:0.3})
     }
     update(){
         let width = this.scale.width
@@ -1046,6 +1135,13 @@ class DeadScene extends Phaser.Scene {
 class PauseMenu extends Phaser.Scene {
     constructor(){
         super("PauseMenu")
+    }
+    preload(){
+        this.load.audio
+        (
+            "click",
+            "./assets/audio/click.mp3"
+        )
     }
     create(){
         this.title = this.add.text(0, 0, "The game is paused", {
@@ -1077,6 +1173,7 @@ class PauseMenu extends Phaser.Scene {
 
         //User interaction
         this.button_background.on('pointerdown', () => {
+            this.click.play()
             this.button.setScale(0.9, 0.9)
             this.scene.stop()
             this.scene.resume("game-scene")
@@ -1091,6 +1188,7 @@ class PauseMenu extends Phaser.Scene {
         })
 
         this.button_background1.on('pointerdown', () => {
+            this.click.play()
             this.button1.setScale(0.9, 0.9)
             this.scene.stop("game-scene")
             this.scene.stop()
@@ -1106,6 +1204,8 @@ class PauseMenu extends Phaser.Scene {
         })
 
         this.cameras.main.fadeIn(500, 0, 0, 0);
+
+        this.click = this.sound.add("click", {volume:0.3})
     }
     update(){
         let width = this.scale.width
@@ -1159,6 +1259,12 @@ class MainMenu extends Phaser.Scene {
             "title",
             "./assets/title.png"
         )
+
+        this.load.audio
+        (
+            "click",
+            "./assets/audio/click.mp3"
+        )
     }
     create(){
         this.input.setDefaultCursor('default')
@@ -1211,6 +1317,7 @@ class MainMenu extends Phaser.Scene {
 
         //User interaction
         this.button_background.on('pointerdown', () => {
+            this.click.play()
             this.button.setScale(0.9, 0.9)
             this.scene.launch("DifficultyScene", {scene: this.scene})
             this.blur = this.add.rectangle(this.scale.width/2, this.scale.height/2, this.scale.width, this.scale.height, 0x000000, 0.9)
@@ -1227,6 +1334,7 @@ class MainMenu extends Phaser.Scene {
         })
 
         this.button_background1.on('pointerdown', () => {
+            this.click.play()
             this.button1.setScale(0.9, 0.9)
             this.scene.stop()
             this.scene.start("Tutorial")
@@ -1242,6 +1350,8 @@ class MainMenu extends Phaser.Scene {
         })
 
         this.cameras.main.fadeIn(500, 0, 0, 0);
+
+        this.click = this.sound.add("click", {volume:0.3})
     }
     update(){
         if(this.blur) this.blur.destroy()
@@ -1361,6 +1471,13 @@ class DifficultyScene extends Phaser.Scene {
     init(data){
         this.last_scene = data.scene
     }
+    preload(){
+        this.load.audio
+        (
+            "click",
+            "./assets/audio/click.mp3"
+        )
+    }
     create(){
         this.difficulty = 1
 
@@ -1423,6 +1540,7 @@ class DifficultyScene extends Phaser.Scene {
 
         //User interaction
         this.button_background.on('pointerdown', () => {
+            this.click.play()
             this.difficulty %= 3
             this.button.setScale(0.9, 0.9)
             this.scene.stop()
@@ -1438,6 +1556,7 @@ class DifficultyScene extends Phaser.Scene {
         })
 
         this.button_background1.on('pointerdown', () => {
+            this.click.play()
             this.button1.setScale(0.9, 0.9)
             this.scene.stop()
             this.scene.resume("MainMenu")
@@ -1452,6 +1571,7 @@ class DifficultyScene extends Phaser.Scene {
         })
 
         this.button_right_background.on('pointerdown', () => {
+            this.click.play()
             this.button_right.setScale(0.9, 0.9)
             this.difficulty += 1
         })
@@ -1466,6 +1586,7 @@ class DifficultyScene extends Phaser.Scene {
         })
 
         this.button_left_background.on('pointerdown', () => {
+            this.click.play()
             this.button_left.setScale(0.9, 0.9)
             this.difficulty -= 1
         })
@@ -1480,6 +1601,8 @@ class DifficultyScene extends Phaser.Scene {
         })
 
         this.cameras.main.fadeIn(500, 0, 0, 0);
+
+        this.click = this.sound.add("click", {volume:0.3})
     }
     update(){
         this.difficulty %= 3

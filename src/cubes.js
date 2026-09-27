@@ -1666,7 +1666,7 @@ export default class Cube {
         let difficult_colors = 8
         if(difficulty == 3){
             difficult_colors = 8
-        }else if(difficulty == 2 || this.difficulty == 1){
+        }else if(difficulty == 2 || difficulty == 1){
             difficult_colors = 7
         }
         let all_colors = []
