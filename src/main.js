@@ -1228,7 +1228,8 @@ class MainMenu extends Phaser.Scene {
 
         this.button_background1.on('pointerdown', () => {
             this.button1.setScale(0.9, 0.9)
-            this.scene.launch("Transition", {scene: this.scene, difficulty:0})
+            this.scene.stop()
+            this.scene.start("Tutorial")
         })
         this.button_background1.on('pointerover', () => {
             this.input.setDefaultCursor('pointer')
@@ -1259,6 +1260,97 @@ class MainMenu extends Phaser.Scene {
         }else{
             this.canvas.setScale(width/(this.canvas.width/3))
         }
+    }
+}
+
+class Tutorial extends Phaser.Scene {
+    constructor(){
+        super("Tutorial")
+    }
+    preload(){
+        this.load.video("moving_example", "./assets/tutorial/moving_example.mp4")
+        this.load.video("jumping_example", "./assets/tutorial/jumping_example.mp4")
+        this.load.video("shift_example", "./assets/tutorial/shift_example.mp4")
+        this.load.video("look_example", "./assets/tutorial/look_example.mp4")
+        this.load.video("pattern_example", "./assets/tutorial/pattern_example.mp4")
+        this.load.video("zombies1_example", "./assets/tutorial/zombies1_example.mp4")
+        this.load.video("zombies2_example", "./assets/tutorial/zombies2_example.mp4")
+    }
+    create(){
+        this.input.setDefaultCursor('default')
+        
+        this.last_step = -1
+        this.step = 0
+
+        this.input.keyboard.on('keydown-ENTER', () => {
+            this.last_step = this.step
+            this.step += 1
+        });
+
+        this.tutorial_text = this.add.text(0, 0, "Use WASD keys to move", {
+            fontFamily:"Arial",
+            fontSize:"45px",
+            color:"#ffffff",
+            wordWrap: 300
+        })
+
+        this.continue_text = this.add.text(0, 0, "Press (Enter) to continue", {
+            fontFamily:"Arial",
+            fontSize:"30px",
+            color:"#ffffff"
+        })
+        this.background = this.add.rectangle(0, 0, 200, 200, 0x627b98)
+        this.tutorial_video = this.add.video(400, 400, "moving_example")
+        this.tutorial_video.setLoop(true)
+        this.tutorial_video.setScale(0.5)
+        this.tutorial_video.play()
+    }
+    update(){
+        let width = this.scale.width
+        let height = this.scale.height
+
+        if(this.step == 0 && this.step != this.last_step){
+            this.tutorial_text.setText("Use WASD keys to move.")
+            this.changeVideo("moving_example")
+        }else if(this.step == 1 && this.step != this.last_step){
+            this.tutorial_text.setText("Press Space to jump. \nDouble-jump onto the cube to rotate it.")
+            this.changeVideo("jumping_example")
+        }else if(this.step == 2 && this.step != this.last_step){
+            this.tutorial_text.setText("Press Shift while you are on top of a color to slide it into an empty space.")
+            this.changeVideo("shift_example")
+        }else if(this.step == 3 && this.step != this.last_step){
+            this.tutorial_text.setText("Use the arrow keys to look the cube from different sides.")
+            this.changeVideo("look_example")
+        }else if(this.step == 4 && this.step != this.last_step){
+            this.tutorial_text.setText("To win match the top face of the cube with the pattern show on the left. \nNote: The interrogation symbol means that in that space can be any color or empty")
+            this.changeVideo("pattern_example")
+        }else if(this.step == 5 && this.step != this.last_step){
+            this.tutorial_text.setText("But be careful with the zombies if they get to the top you loose. \nEach time you change something on the cube they take a few steps.")
+            this.changeVideo("zombies1_example")
+        }else if(this.step == 6 && this.step != this.last_step){
+            this.tutorial_text.setText("You can knock down a zombie if you rotate the same column it's climbing.")
+            this.changeVideo("zombies2_example")
+        }else if(this.step == 7 && this.step != this.last_step){
+            this.scene.stop()
+            this.scene.start("MainMenu")
+        }
+        this.tutorial_text.setPosition(width/4 - this.tutorial_text.width/2, height/2 - height/3 + 70)
+        this.tutorial_text.setWordWrapWidth(width/2.25)
+        this.continue_text.setPosition(this.tutorial_text.x + (this.tutorial_text.width-this.continue_text.width), this.tutorial_text.y + this.tutorial_text.height + this.continue_text.height)
+        this.continue_text.setScale(width/1440)
+
+        this.background.setPosition(3*width/4, height/2)
+        this.background.setSize(width/2, height)
+        this.tutorial_video.setPosition(3*width/4, height/2)
+        this.tutorial_video.setScale((width/2 - 50)/this.tutorial_video.width)
+    }
+
+    changeVideo(key){
+        this.last_step = this.step
+        this.tutorial_video.destroy()
+        this.tutorial_video = this.add.video(400, 400, key)
+        this.tutorial_video.setLoop(true)
+        this.tutorial_video.play()
     }
 }
 
@@ -1455,6 +1547,7 @@ class Transition extends Phaser.Scene {
 }
 
 const config = {
+    //061132
     type: Phaser.AUTO,
     parent: "gameCanvas",
     backgroundColor: "#061132",
@@ -1471,7 +1564,8 @@ const config = {
         DeadScene,
         Transition,
         PauseMenu,
-        DifficultyScene
+        DifficultyScene,
+        Tutorial
     ]
 }
 
