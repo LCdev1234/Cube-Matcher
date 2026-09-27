@@ -2,7 +2,7 @@
 [![itch.io](https://img.shields.io/badge/itch.io-Cubic%20Runner-fa5c5c?logo=itchdotio&logoColor=white)](https://lcdev1234.itch.io/cube-matcher)
 
 ## Cube Matcher
-A 3d puzzle game where you rotate a cube to match a pattern, but be careful that the zombies dont get too close to you
+A 3d puzzle game where you rotate a cube to match a pattern, but being careful that the zombies dont get too close to you
 
 ![Game Capture](https://github.com/user-attachments/assets/92dd31c8-4441-42a0-a507-57ca993cc4ea)
 ## Play in
@@ -12,6 +12,13 @@ A 3d puzzle game where you rotate a cube to match a pattern, but be careful that
 
 ## Quick play
 Playi in browser on: _[itch.io](https://lcdev1234.itch.io/cube-matcher)_
+
+## Features
+
+- 3D interactable 3×3 cube puzzle
+- Different game difficulties
+- Random patterns to solve
+- Patters can match even when rotated
 
 ## Building
 Alredy builded realeses in _[here](https://github.com/LCdev1234/Cube-Matcher/releases)_
@@ -25,13 +32,6 @@ If you'd rather build the game yourself:
 4. To build the game:
   ```npm run build```
 
-## Features
-
-- 3D interactable 3×3 cube puzzle
-- Different game difficulties
-- Random patterns to solve
-- Patters can match even when rotated
-
 ## Credits
 
 ### Assets
@@ -42,3 +42,6 @@ If you'd rather build the game yourself:
     - **Winner game sound** by **PuyoPuyoMegaFan1234** — [Pixabay](https://pixabay.com/es/sound-effects/pel%C3%ADculas-y-efectos-especiales-winner-game-sound-404167/)
     - **Impact Sounds** — Kenney — [Kenney.nl](https://kenney.nl/assets/impact-sounds)
     - **UI audio** — Kenney — [Kenney.nl](https://kenney.nl/assets/ui-audio)
+### Libraries
+- [Phaser](https://phaser.io/) — HTML5 game framework
+- [Vite](https://vite.dev/) — Build tool
