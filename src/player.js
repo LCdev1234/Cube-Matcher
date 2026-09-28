@@ -52,6 +52,7 @@ export default class Player{
         this.shift_cooldown += 1 * fps_ratio
         this.jump_timer += 1 * fps_ratio
         this.timer += 1 *fps_ratio
+        this.last_jump_time += 1 *fps_ratio
         if(this.can_slide) this.slider_timer += 1 * fps_ratio
         if(!this.can_down) this.kinetic_jump += 1 * fps_ratio
 

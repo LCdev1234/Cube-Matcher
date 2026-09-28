@@ -670,8 +670,8 @@ class MainScene extends Phaser.Scene {
         //this.cube.rubik_rotation.x[Math.floor((this.player.x + 90)/60)] += 0.1*/
         if(this.player.push){
             this.jump_impact.play()
-            this.player.second_jump = time - this.player.last_jump_time < 600
-            this.player.last_jump_time = time
+            this.player.second_jump = this.player.last_jump_time < 40
+            this.player.last_jump_time = 0
 
             let playerInfo = this.player.getAxis()
             let smallest_axis = playerInfo.smallest_axis
